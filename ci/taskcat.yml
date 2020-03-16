@@ -7,7 +7,7 @@ global:
     - ap-northeast-2
     - ap-south-1
     - ap-southeast-1
-  #  - ap-southeast-2
+    - ap-southeast-2
     - ca-central-1
     - eu-central-1
     - eu-west-1
@@ -21,8 +21,10 @@ tests:
   ribbon-sbc:
     parameter_input: quickstart-ribbon-sbc-params.json
     template_file: ribbon-sbc-master.template.yaml
-  ribbon-sbc-apse2:
-    parameter_input: quickstart-ribbon-sbc-params-apse2.json
-    template_file: ribbon-sbc-master.template.yaml
     regions:
-      - ap-southeast-2
+      - us-east-2
+#  ribbon-sbc-apse2:
+#    parameter_input: quickstart-ribbon-sbc-params-apse2.json
+#    template_file: ribbon-sbc-master.template.yaml
+#    regions:
+#      - ap-southeast-2
