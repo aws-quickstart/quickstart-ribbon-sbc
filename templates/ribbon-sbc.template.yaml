@@ -50,6 +50,7 @@ Metadata:
           default: AWS Quick Start configuration
         Parameters:
           - QSS3BucketName
+          - QSS3BucketRegion
           - QSS3KeyPrefix
     ParameterLabels:
       KeyPairName:
@@ -98,9 +99,10 @@ Metadata:
         default: SBC volume size
       QSS3BucketName:
         default: QuickStart S3 bucket name
+      QSS3BucketRegion:
+        default: Quick Start S3 bucket region
       QSS3KeyPrefix:
         default: QuickStart S3 key prefix
-
 Parameters:
   KeyPairName:
     Description: Name of an existing EC2 key pair to enable SSH access to various EC2
@@ -253,6 +255,10 @@ Parameters:
       numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start
       or end with a hyphen (-).
     Type: String
+  QSS3BucketRegion:
+    Default: 'us-east-1'
+    Description: 'The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.'
+    Type: String
   QSS3KeyPrefix:
     AllowedPattern: ^[0-9a-zA-Z-/]*$
     ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
@@ -263,6 +269,7 @@ Parameters:
       forward slash (/).
     Type: String
 Conditions:
+  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
   VolumeTypeIO1:
     !Equals
     - !Ref SBCVolumeType
@@ -814,9 +821,11 @@ Resources:
                 Action:
                   - s3:Get*
                   - s3:List*
+                  - s3:GetObject
                 Resource:
-                  - !Sub arn:aws:s3:::${QSS3BucketName}
-                  - !Sub arn:aws:s3:::${QSS3BucketName}/*
+                  - !Sub
+                      - arn:${AWS::Partition}:s3:::${S3Bucket}/${QSS3KeyPrefix}*
+                      - S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
         - PolicyName: NetworkInterfaceDetails
           PolicyDocument:
             Version: '2012-10-17'
@@ -1097,8 +1106,7 @@ Resources:
         DownloadAnsiblePlaybooks:
           commands:
             010_download_files:
-              command: !Sub 'aws s3 cp --recursive s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/ansible
-                /root/ansible'
+              command: !Sub 'aws s3 cp --recursive s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/ansible /root/ansible --region=${QSS3BucketRegion}'
             020_create_logfile:
               command: 'touch /root/ansible/ConfigGen.log'
             030_create_varsdir:
@@ -1293,9 +1301,14 @@ Resources:
   CopyZipsTemplate:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}submodules/lambda-copyzips/templates/copy-zips.template.yaml
+      TemplateURL:
+        !Sub
+          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/lambda-copyzips/templates/copy-zips.template.yaml'
+          - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+            S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       Parameters:
         QSS3BucketName: !Ref QSS3BucketName
+        QSS3BucketRegion: !Ref QSS3BucketRegion
         QSS3KeyPrefix: !Ref QSS3KeyPrefix
         SourceObjects: "functions/packages/KeyGen/lambda.zip"
   GetRSA:

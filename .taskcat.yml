@@ -1,0 +1,33 @@
+project:
+  name: quickstart-ribbon-sbc
+  owner: quickstart-eng@amazon.com
+  package_lambda: false
+  regions:
+    - ap-northeast-1
+    - ap-northeast-2
+    - ap-south-1
+    - ap-southeast-1
+    - ap-southeast-2
+    - ca-central-1
+    - eu-central-1
+    - eu-west-1
+    - sa-east-1
+    - us-east-1
+    - us-east-2
+    - us-west-1
+    - us-west-2
+  parameters:
+    KeyPairName: override
+    QSS3BucketName: $[taskcat_autobucket]
+    SBCAvailabilityZone: $[taskcat_getsingleaz_1]
+    SBCCLIPassword: Ribbon@123
+    QSS3BucketRegion: $[taskcat_current_region]
+tests:
+  ribbon-sbc:
+    regions:
+    - us-east-2
+    template: templates/ribbon-sbc-master.template.yaml
+#  ribbon-sbc-apse2:
+#    regions:
+#      - ap-southeast-2
+#    template: templates/ribbon-sbc-master.template.yaml
