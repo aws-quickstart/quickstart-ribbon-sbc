@@ -10,7 +10,7 @@ Metadata:
       RIBBONSBCAMI:
         product-code: 260q24tnotacikdg842b8tds9
       RIBBONASTERISKAMI:
-        name: AWS FreePBX 64bit 12.7.6-1910-*
+        name: AWS FreePBX 64bit*
         owner-alias: aws-marketplace
         product-code: a67v7lpbox120ezc1aieqscjf
   AWS::CloudFormation::Interface:
@@ -302,64 +302,64 @@ Mappings:
       AMZNLINUXHVM: amzn-ami-hvm-2018.03.0.20181129-x86_64-gp2
       RIBBONASTERISKAMI: AWS FreePBX 64bit 12.7.6-1910-1
     ap-northeast-1:
-      AMZNLINUXHVM: ami-02ddf94e5edc8e904
-      RIBBONASTERISKAMI: ami-007b1fdd6a3246f55
+      AMZNLINUXHVM: ami-0318ecd6d05daa212
+      RIBBONASTERISKAMI: ami-008fd79a1f3bc5b2b
       RIBBONSBCAMI: ami-0b984752ed7d6a0f0
     ap-northeast-2:
-      AMZNLINUXHVM: ami-0ecd78c22823e02ef
-      RIBBONASTERISKAMI: ami-02a1f6a6e46a3c270
+      AMZNLINUXHVM: ami-09391a0ad9f9243b6
+      RIBBONASTERISKAMI: ami-01afbc28d9843f883
       RIBBONSBCAMI: ami-047c00c834b46bdb9
     ap-south-1:
-      AMZNLINUXHVM: ami-05695932c5299858a
-      RIBBONASTERISKAMI: ami-0f23f004989495129
+      AMZNLINUXHVM: ami-04b2519c83e2a7ea5
+      RIBBONASTERISKAMI: ami-015dabfe15b9d2a88
       RIBBONSBCAMI: ami-00d7df60f86722524
     ap-southeast-1:
-      AMZNLINUXHVM: ami-043afc2b8b6cfba5c
-      RIBBONASTERISKAMI: ami-0f00c42ba32f28838
+      AMZNLINUXHVM: ami-0dff4318d85149d5d
+      RIBBONASTERISKAMI: ami-03d250210dcce3b2d
       RIBBONSBCAMI: ami-00c8f3e9b68d75b59
     ap-southeast-2:
-      AMZNLINUXHVM: ami-01393ce9a3ca55d67
-      RIBBONASTERISKAMI: ami-0df4b700e4b47cc16
+      AMZNLINUXHVM: ami-050e1ec030abb8dde
+      RIBBONASTERISKAMI: ami-06415f47eea3d2cf8
       RIBBONSBCAMI: ami-004cd1d7ae297e670
     ca-central-1:
-      AMZNLINUXHVM: ami-0fa94ecf2fef3420b
-      RIBBONASTERISKAMI: ami-04c82cb383b2bd062
+      AMZNLINUXHVM: ami-021321e9bc16d5186
+      RIBBONASTERISKAMI: ami-0b5a5375417a71244
       RIBBONSBCAMI: ami-0ef943c3daba37c78
     eu-central-1:
-      AMZNLINUXHVM: ami-0ba441bdd9e494102
-      RIBBONASTERISKAMI: ami-00eee00f9cc655548
+      AMZNLINUXHVM: ami-03ab4e8f1d88ce614
+      RIBBONASTERISKAMI: ami-016dd93c4f287a344
       RIBBONSBCAMI: ami-0a0ee6030e3991da9
     eu-west-1:
-      AMZNLINUXHVM: ami-0e61341fa75fcaa18
-      RIBBONASTERISKAMI: ami-09dd8e7b9a87f202f
+      AMZNLINUXHVM: ami-00890f614e48ce866
+      RIBBONASTERISKAMI: ami-07ff10c9d0cc5bd2a
       RIBBONSBCAMI: ami-09bb2f4b9adb91497
     eu-west-2:
-      AMZNLINUXHVM: ami-050b8344d77081f4b
-      RIBBONASTERISKAMI: ami-0eb5156d95eabebb9
+      AMZNLINUXHVM: ami-0596aab74a1ce3983
+      RIBBONASTERISKAMI: ami-0150e4f8c08c79ea0
       RIBBONSBCAMI: ami-0929a04a05ed4660b
     eu-west-3:
-      AMZNLINUXHVM: ami-053418e626d0549fc
-      RIBBONASTERISKAMI: ami-0971df6eaaf820691
+      AMZNLINUXHVM: ami-06cba15121418cdcb
+      RIBBONASTERISKAMI: ami-08394075fa4a5b062
       RIBBONSBCAMI: ami-0bb4578f3ef1d00f5
     sa-east-1:
-      AMZNLINUXHVM: ami-05b7dbc290217250d
-      RIBBONASTERISKAMI: ami-041727792070a7377
+      AMZNLINUXHVM: ami-03e1e4abf50e14ded
+      RIBBONASTERISKAMI: ami-085405a1b61e3cf10
       RIBBONSBCAMI: ami-07e90b1824ba80de0
     us-east-1:
-      AMZNLINUXHVM: ami-0e2ff28bfb72a4e45
-      RIBBONASTERISKAMI: ami-0ff5701693f37d13f
+      AMZNLINUXHVM: ami-0915e09cc7ceee3ab
+      RIBBONASTERISKAMI: ami-0cfc3908bc0991fc9
       RIBBONSBCAMI: ami-05b8856db70198486
     us-east-2:
-      AMZNLINUXHVM: ami-0998bf58313ab53da
-      RIBBONASTERISKAMI: ami-0559f008fec72cf42
+      AMZNLINUXHVM: ami-097834fcb3081f51a
+      RIBBONASTERISKAMI: ami-0312edefd259298a1
       RIBBONSBCAMI: ami-0d1f5143e28d74c9e
     us-west-1:
-      AMZNLINUXHVM: ami-021bb9f371690f97a
-      RIBBONASTERISKAMI: ami-01416377845fc848a
+      AMZNLINUXHVM: ami-0027eed75be6f3bf4
+      RIBBONASTERISKAMI: ami-0b54b8ca0b2f56609
       RIBBONSBCAMI: ami-0811a0b37cdcd3865
     us-west-2:
-      AMZNLINUXHVM: ami-079f731edfe27c29c
-      RIBBONASTERISKAMI: ami-058ba1fe2295dda8e
+      AMZNLINUXHVM: ami-01f08ef3e76b957e5
+      RIBBONASTERISKAMI: ami-06a13e909ee154e1f
       RIBBONSBCAMI: ami-04f0af8362c548c9a
 Resources:
   SBCActiveAccessVoipIface:
