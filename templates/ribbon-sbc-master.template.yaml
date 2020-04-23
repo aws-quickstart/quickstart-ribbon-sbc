@@ -29,7 +29,7 @@ Metadata:
         Parameters:
           - KeyPairName
           - SBCInstanceType
-          - AsteriskInstanceType
+          - FreePBXInstanceType
           - SBCCLIPassword
       - Label:
           default: SBC options
@@ -78,8 +78,8 @@ Metadata:
         default: VPC CIDR
       SBCInstanceType:
         default: SBC instance type
-      AsteriskInstanceType:
-        default: Asterisk instance type
+      FreePBXInstanceType:
+        default: FreePBX instance type
       SBCPersonalityType:
         default: SBC personality Type
       SBCActiveInstanceName:
@@ -307,8 +307,8 @@ Parameters:
       can include numbers, lowercase letters, uppercase letters, hyphens (-), and
       forward slash (/).
     Type: String
-  AsteriskInstanceType:
-    Description: Instance type for the Asterisk instance.
+  FreePBXInstanceType:
+    Description: Instance type for the FreePBX instance.
     Type: String
     Default: m5.xlarge
     AllowedValues:
@@ -434,6 +434,6 @@ Resources:
         SBCVolumeType: !Ref SBCVolumeType
         SBCVolumeIOPS: !Ref SBCVolumeIOPS
         SBCVolumeSize: !Ref SBCVolumeSize
-        AsteriskInstanceType: !Ref AsteriskInstanceType
+        FreePBXInstanceType: !Ref FreePBXInstanceType
         SBCAccessVoipCIDR: !Ref SBCAccessVoipCIDR
         SBCCoreVoipCIDR:  !Ref SBCCoreVoipCIDR

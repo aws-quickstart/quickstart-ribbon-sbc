@@ -9,7 +9,7 @@ Metadata:
     Filters:
       RIBBONSBCAMI:
         product-code: 260q24tnotacikdg842b8tds9
-      RIBBONASTERISKAMI:
+      RIBBONFREEPBXAMI:
         name: AWS FreePBX 64bit*
         owner-alias: aws-marketplace
         product-code: a67v7lpbox120ezc1aieqscjf
@@ -32,7 +32,7 @@ Metadata:
         Parameters:
           - KeyPairName
           - SBCInstanceType
-          - AsteriskInstanceType
+          - FreePBXInstanceType
           - SBCCLIPassword
       - Label:
           default: SBC options
@@ -77,8 +77,8 @@ Metadata:
         default: Bastion security group ID
       SBCInstanceType:
         default: SBC instance type
-      AsteriskInstanceType:
-        default: Asterisk instance type
+      FreePBXInstanceType:
+        default: FreePBX instance type
       SBCPersonalityType:
         default: SBC personality type
       SBCActiveInstanceName:
@@ -169,8 +169,8 @@ Parameters:
       - c5.4xlarge
       - c5.9xlarge
     ConstraintDescription: Must be a valid EC2 instance type.
-  AsteriskInstanceType:
-    Description: Instance type for the Asterisk Instance.
+  FreePBXInstanceType:
+    Description: Instance type for the FreePBX Instance.
     Type: String
     Default: m5.xlarge
     AllowedValues:
@@ -300,66 +300,66 @@ Mappings:
     AMI:
       RIBBONSBCAMI: sbc-V07.00.00S401-connexip-os_06.00.00-S401_1_amd64_07_06_18_17_58
       AMZNLINUXHVM: amzn-ami-hvm-2018.03.0.20181129-x86_64-gp2
-      RIBBONASTERISKAMI: AWS FreePBX 64bit 12.7.6-1910-1
+      RIBBONFREEPBXAMI: AWS FreePBX 64bit 12.7.6-1910-1
     ap-northeast-1:
       AMZNLINUXHVM: ami-0318ecd6d05daa212
-      RIBBONASTERISKAMI: ami-008fd79a1f3bc5b2b
+      RIBBONFREEPBXAMI: ami-008fd79a1f3bc5b2b
       RIBBONSBCAMI: ami-0b984752ed7d6a0f0
     ap-northeast-2:
       AMZNLINUXHVM: ami-09391a0ad9f9243b6
-      RIBBONASTERISKAMI: ami-01afbc28d9843f883
+      RIBBONFREEPBXAMI: ami-01afbc28d9843f883
       RIBBONSBCAMI: ami-047c00c834b46bdb9
     ap-south-1:
       AMZNLINUXHVM: ami-04b2519c83e2a7ea5
-      RIBBONASTERISKAMI: ami-015dabfe15b9d2a88
+      RIBBONFREEPBXAMI: ami-015dabfe15b9d2a88
       RIBBONSBCAMI: ami-00d7df60f86722524
     ap-southeast-1:
       AMZNLINUXHVM: ami-0dff4318d85149d5d
-      RIBBONASTERISKAMI: ami-03d250210dcce3b2d
+      RIBBONFREEPBXAMI: ami-03d250210dcce3b2d
       RIBBONSBCAMI: ami-00c8f3e9b68d75b59
     ap-southeast-2:
       AMZNLINUXHVM: ami-050e1ec030abb8dde
-      RIBBONASTERISKAMI: ami-06415f47eea3d2cf8
+      RIBBONFREEPBXAMI: ami-06415f47eea3d2cf8
       RIBBONSBCAMI: ami-004cd1d7ae297e670
     ca-central-1:
       AMZNLINUXHVM: ami-021321e9bc16d5186
-      RIBBONASTERISKAMI: ami-0b5a5375417a71244
+      RIBBONFREEPBXAMI: ami-0b5a5375417a71244
       RIBBONSBCAMI: ami-0ef943c3daba37c78
     eu-central-1:
       AMZNLINUXHVM: ami-03ab4e8f1d88ce614
-      RIBBONASTERISKAMI: ami-016dd93c4f287a344
+      RIBBONFREEPBXAMI: ami-016dd93c4f287a344
       RIBBONSBCAMI: ami-0a0ee6030e3991da9
     eu-west-1:
       AMZNLINUXHVM: ami-00890f614e48ce866
-      RIBBONASTERISKAMI: ami-07ff10c9d0cc5bd2a
+      RIBBONFREEPBXAMI: ami-07ff10c9d0cc5bd2a
       RIBBONSBCAMI: ami-09bb2f4b9adb91497
     eu-west-2:
       AMZNLINUXHVM: ami-0596aab74a1ce3983
-      RIBBONASTERISKAMI: ami-0150e4f8c08c79ea0
+      RIBBONFREEPBXAMI: ami-0150e4f8c08c79ea0
       RIBBONSBCAMI: ami-0929a04a05ed4660b
     eu-west-3:
       AMZNLINUXHVM: ami-06cba15121418cdcb
-      RIBBONASTERISKAMI: ami-08394075fa4a5b062
+      RIBBONFREEPBXAMI: ami-08394075fa4a5b062
       RIBBONSBCAMI: ami-0bb4578f3ef1d00f5
     sa-east-1:
       AMZNLINUXHVM: ami-03e1e4abf50e14ded
-      RIBBONASTERISKAMI: ami-085405a1b61e3cf10
+      RIBBONFREEPBXAMI: ami-085405a1b61e3cf10
       RIBBONSBCAMI: ami-07e90b1824ba80de0
     us-east-1:
       AMZNLINUXHVM: ami-0915e09cc7ceee3ab
-      RIBBONASTERISKAMI: ami-0cfc3908bc0991fc9
+      RIBBONFREEPBXAMI: ami-0cfc3908bc0991fc9
       RIBBONSBCAMI: ami-05b8856db70198486
     us-east-2:
       AMZNLINUXHVM: ami-097834fcb3081f51a
-      RIBBONASTERISKAMI: ami-0312edefd259298a1
+      RIBBONFREEPBXAMI: ami-0312edefd259298a1
       RIBBONSBCAMI: ami-0d1f5143e28d74c9e
     us-west-1:
       AMZNLINUXHVM: ami-0027eed75be6f3bf4
-      RIBBONASTERISKAMI: ami-0b54b8ca0b2f56609
+      RIBBONFREEPBXAMI: ami-0b54b8ca0b2f56609
       RIBBONSBCAMI: ami-0811a0b37cdcd3865
     us-west-2:
       AMZNLINUXHVM: ami-01f08ef3e76b957e5
-      RIBBONASTERISKAMI: ami-06a13e909ee154e1f
+      RIBBONFREEPBXAMI: ami-06a13e909ee154e1f
       RIBBONSBCAMI: ami-04f0af8362c548c9a
 Resources:
   SBCActiveAccessVoipIface:
@@ -1242,13 +1242,13 @@ Resources:
       Path: /
       Roles:
         - !Ref SetupRole
-  AsteriskInstance:
+  FreePBXInstance:
     Type: 'AWS::EC2::Instance'
     Properties:
       ImageId: !FindInMap
         - AWSAMIRegionMap
         - !Ref 'AWS::Region'
-        - RIBBONASTERISKAMI
+        - RIBBONFREEPBXAMI
       BlockDeviceMappings:
         - DeviceName: /dev/xvda
           Ebs:
@@ -1256,7 +1256,7 @@ Resources:
             VolumeSize: 20
             DeleteOnTermination: false
       IamInstanceProfile: !Ref SetupRoleProfile
-      InstanceType: !Ref AsteriskInstanceType
+      InstanceType: !Ref FreePBXInstanceType
       EbsOptimized: true
       KeyName: !Ref KeyPairName
       NetworkInterfaces:
@@ -1264,7 +1264,7 @@ Resources:
           DeviceIndex: '0'
       Tags:
         - Key: Name
-          Value: Ribbon SBC Asterisk Instance
+          Value: Ribbon SBC FreePBX Instance
       UserData:
         'Fn::Base64':
           'Fn::Sub':
