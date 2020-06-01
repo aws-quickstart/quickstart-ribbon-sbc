@@ -49,6 +49,7 @@ Metadata:
       - Label:
           default: AWS Quick Start configuration
         Parameters:
+          - HFEScriptLocation
           - QSS3BucketName
           - QSS3BucketRegion
           - QSS3KeyPrefix
@@ -97,6 +98,8 @@ Metadata:
         default: SBC volume IOPS
       SBCVolumeSize:
         default: SBC volume size
+      HFEScriptLocation:
+        default: HFE script location
       QSS3BucketName:
         default: QuickStart S3 bucket name
       QSS3BucketRegion:
@@ -245,6 +248,13 @@ Parameters:
     Default: '65'
     MinValue: '65'
     MaxValue: '1000'
+  HFEScriptLocation:
+    Description: Where the HFE.sh script is downloaded from. Either the SBC or S3 Bucket
+    Type: String
+    Default: SBC
+    AllowedValues:
+      - S3 Bucket
+      - SBC
   QSS3BucketName:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
     ConstraintDescription: Quick Start bucket name can include numbers, lowercase
@@ -274,6 +284,7 @@ Conditions:
     !Equals
     - !Ref SBCVolumeType
     - io1
+  GetHfeFromSBC: !Equals [!Ref HFEScriptLocation, 'SBC']
 Rules:
   NameValidation:
     Assertions:
@@ -905,6 +916,7 @@ Resources:
                 "ALT_Pkt1_00"          : "VIP2",
                 "ClusterIp"            : "${SBCActiveHAIface.PrimaryPrivateIpAddress}",
                 "HFE"                  : "${HFEPub_SecondaryPrivIP}",
+                ${HFE_MGT}
                 "SbcPersonalityType"   : "${SBCPersonalityType}",
                 "SbcMgmtMode"          : "centralized",
                 "CEName"               : "${SBCActiveInstanceName}",
@@ -923,6 +935,11 @@ Resources:
                 - !GetAtt HFEPublicInterface.SecondaryPrivateIpAddresses
               PUBLIC_KEY:
                 !GetAtt GetRSA.PUB
+              HFE_MGT:
+                !If 
+                  - GetHfeFromSBC 
+                  - !Join [ "", [ "\"HfeMgtIp\"             : \"", !GetAtt HFEManagementInterface.PrimaryPrivateIpAddress, "\"," ] ]
+                  - "" 
   SBCPassiveInstance:
     Type: AWS::EC2::Instance
     Properties:
@@ -1050,12 +1067,7 @@ Resources:
                 date +"%Y-%m-%d %T"
               }
               mkdir -p ${!HFE_DIR};
-              aws s3 cp --region ${AWS::Region} s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/HFE.sh ${!HFE_FILE}
-              if [ $? -ne 0 ]; then
-                /bin/echo $(timestamp) "Error:Could not copy HFE script from S3 bucket." >> ${!LOG_FILE}
-              else
-                /bin/echo $(timestamp) "Copied HFE script from S3 bucket." >> ${!LOG_FILE}
-              fi;
+              ${GET_HFE_SCRIPT}
               /bin/echo "" > ${!NAT_VAR}
               /bin/echo "SBC_SECONDARY_IP=${SBC_SECONDARY_IP}" >> ${!NAT_VAR}
               /bin/echo "REMOTE_SSH_MACHINE_IP=${REMOTE_SSH_MACHINE_IP}" >> ${!NAT_VAR}
@@ -1069,6 +1081,64 @@ Resources:
                 - 0
                 - !GetAtt SBCActiveAccessVoipIface.SecondaryPrivateIpAddresses
               REMOTE_SSH_MACHINE_IP: ''
+              GET_HFE_SCRIPT:
+                !If
+                  - GetHfeFromSBC
+                  - !Sub
+                    - |
+                      INSTANCE_ID=''
+                      count=0
+                      while [[ ${!INSTANCE_ID} == '' ]] && [ ${!count} -lt 20 ]; do
+                        sleep 15s
+                        INSTANCE_ID=$(aws ec2 describe-instances --region ${AWS::Region} --filters "Name=network-interface.addresses.private-ip-address,Values=${SBC_HA_IP}" "Name=network-interface.subnet-id,Values=${SBCHASubnetID}" --query Reservations[0].Instances[0].InstanceId --out text)
+                        count=$(( count + 1 ))
+                      done
+                      if [[ ${!INSTANCE_ID} == '' ]]; then 
+                        /bin/echo $(timestamp) "Failed to get active instance Id. Exiting" >> ${!LOG_FILE}
+                        exit 1
+                      fi
+                      yum -y install expect
+                      MGT_IP=$(aws ec2 describe-instances --instance-ids ${!INSTANCE_ID} --region ${AWS::Region} --query "Reservations[0].Instances[0].NetworkInterfaces[?SubnetId=='${SBCManagementSubnetID}'].PrivateIpAddress" --out text)
+                      ip route add ${!MGT_IP} dev eth1
+                      PASS=$(aws ec2 describe-instances --instance-ids ${!INSTANCE_ID} --region ${AWS::Region} --query "Reservations[0].Instances[0].NetworkInterfaces[?PrivateIpAddress=='${SBC_HA_IP}'].NetworkInterfaceId" --out text)
+                      while [[ $(aws ec2 describe-instances --instance-ids ${!INSTANCE_ID} --region ${AWS::Region} --query "Reservations[0].Instances[0].State.Name" --out text) != "running" ]]; do
+                        sleep 2s
+                      done
+                      count=0
+                      while [ ! -f ${!HFE_FILE} ] && [ ${!count} -lt 60 ]; do
+                        sleep 5s
+                        count=$(( count + 1 ))
+                        /usr/bin/expect<<EOD
+                        spawn sftp -P 2024 hfeAdmin@${!MGT_IP}
+                        expect {
+                          "Are you sure you want to continue connecting (yes/no)" {
+                            send "yes\r"
+                            exp_continue
+                          }
+                          "*assword:*" {
+                            send "${!PASS}\\r"
+                            expect "sftp>"
+                            send "get HFE.sh ${!HFE_FILE}\\r"
+                            expect "sftp>"
+                            send "bye\\r"
+                          }
+                        }
+                      EOD
+                      done
+                      if [ ! -f ${!HFE_FILE} ]; then
+                        /bin/echo $(timestamp) "Error:Could not copy HFE script from SBC." >> ${!LOG_FILE}
+                        exit 1
+                      else
+                        /bin/echo $(timestamp) "Copied HFE script from SBC." >> ${!LOG_FILE}
+                      fi
+                    - SBC_HA_IP: !GetAtt SBCActiveHAIface.PrimaryPrivateIpAddress
+                  - !Sub |
+                      aws s3 cp --region ${AWS::Region} s3://${QSS3BucketName}/${QSS3KeyPrefix}scripts/HFE.sh ${!HFE_FILE}
+                      if [ $? -ne 0 ]; then
+                        /bin/echo $(timestamp) "Error:Could not copy HFE script from S3 bucket." >> ${!LOG_FILE}
+                      else
+                        /bin/echo $(timestamp) "Copied HFE script from S3 bucket." >> ${!LOG_FILE}
+                      fi;
   AnsibleConfigServer:
     Type: AWS::EC2::Instance
     DependsOn:
