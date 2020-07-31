@@ -123,6 +123,7 @@ Parameters:
       - Ubuntu-Server-20.04-LTS-HVM
       - SUSE-SLES-15-HVM
     Default: Amazon-Linux2-HVM
+    Type: String
     Description: "The Linux distribution for the AMI to be used for the bastion instances."
   BastionInstanceType:
     AllowedValues:
