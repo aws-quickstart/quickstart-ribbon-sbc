@@ -117,13 +117,12 @@ Parameters:
     AllowedPattern: (^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$)
     ConstraintDescription: Must contain one uppercase letter, one lowercase letter, one number, and one special character. Must be 8chars or more.  
   BastionAMIOS:
-    Default: "Amazon-Linux-HVM"
     AllowedValues:
-      - Amazon-Linux-HVM
+      - Amazon-Linux2-HVM
       - CentOS-7-HVM
-      - Ubuntu-Server-14.04-LTS-HVM
-      - Ubuntu-Server-16.04-LTS-HVM
-    Type: String
+      - Ubuntu-Server-20.04-LTS-HVM
+      - SUSE-SLES-15-HVM
+    Default: Amazon-Linux2-HVM
     Description: "The Linux distribution for the AMI to be used for the bastion instances."
   BastionInstanceType:
     AllowedValues:
