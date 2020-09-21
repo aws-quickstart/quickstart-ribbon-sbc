@@ -8,3 +8,4 @@
 [submodule "submodules/lambda-copyzips"]
 	path = submodules/lambda-copyzips
 	url = git@github.com:aws-quickstart/lambda-copyzips.git
+	branch = main
